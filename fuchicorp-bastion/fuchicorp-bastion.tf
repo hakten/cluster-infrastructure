@@ -1,6 +1,6 @@
 provider "google" {
   credentials = "${file("./fuchicorp-service-account.json")}"
-  project     = "${var.project}"
+  project     = "${var.google_project_id}"
   zone        = "${var.zone}"
 }
 
@@ -23,6 +23,7 @@ resource "google_compute_instance" "vm_instance" {
   #!/bin/bash
   export GIT_TOKEN="${var.git_common_token}"
   echo 'export GIT_TOKEN="${var.git_common_token}"' >> /root/.bashrc
+  sleep 10
   yum install python-pip git jq wget unzip vim centos-release-scl scl-utils-build -y
   yum install  python33 gcc python3 -y
 

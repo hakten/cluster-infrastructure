@@ -2,3 +2,5 @@
 *.terraform*
 *tfvars*
 *json*
+*backend.tf
+*project.yaml*

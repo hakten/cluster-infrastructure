@@ -2,7 +2,7 @@ variable "instance_name" {
   default = "bastion-fuchicorp"
 }
 
-variable "project" {
+variable "google_project_id" {
   default = "fuchicorp-project-256020"
 }
 
