@@ -19,6 +19,10 @@ resource "google_compute_instance" "vm_instance" {
     access_config = {}
   }
 
+  metadata {
+    sshKeys = "${var.gce_ssh_user}:${file(var.gce_ssh_pub_key_file)}"
+  }
+
   metadata_startup_script = <<EOF
   #!/bin/bash
   export GIT_TOKEN="${var.git_common_token}"
@@ -50,6 +54,24 @@ resource "google_compute_instance" "vm_instance" {
   crontab /sync-crontab
 
 EOF
+}
+
+resource "null_resource" "local_generate_kube_config" {
+  depends_on = ["google_compute_instance.vm_instance"]
+  provisioner "local-exec" {
+    command = <<EOF
+    #!/bin/bash
+    until ping -c1 ${google_compute_instance.vm_instance.network_interface.0.access_config.0.nat_ip} >/dev/null 2>&1; do echo "Tring to connect bastion host"; sleep 2; done
+    wget https://raw.githubusercontent.com/fuchicorp/common_scripts/feature/kube-config/set-environments/kubernetes/set-kube-config.sh 
+    ENDPOINT=$(kubectl get endpoints kubernetes | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}')
+    bash set-kube-config.sh $ENDPOINT
+    ssh fsadykov@${google_compute_instance.vm_instance.network_interface.0.access_config.0.nat_ip} sudo mkdir /fuchicorp | echo 'Folder exist'
+    scp -r  "admin_config"   fsadykov@${google_compute_instance.vm_instance.network_interface.0.access_config.0.nat_ip}:~/
+    scp -r  "view_config"   fsadykov@${google_compute_instance.vm_instance.network_interface.0.access_config.0.nat_ip}:~/
+    ssh fsadykov@${google_compute_instance.vm_instance.network_interface.0.access_config.0.nat_ip} sudo mv -f *config /fuchicorp/
+    rm -rf set-kube-config*
+EOF
+  }
 }
 
 resource "google_dns_record_set" "fuchicorp" {
