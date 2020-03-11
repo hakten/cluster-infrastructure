@@ -50,7 +50,7 @@ resource "google_compute_instance" "vm_instance" {
 
   curl https://sdk.cloud.google.com | bash && exec -l $SHELL
 
-  echo "* * * * * source /root/.bashrc && cd /common_scripts/bastion-scripts/ && python3 sync-users.py" >> /sync-crontab
+  echo "30 * * * * source /root/.bashrc && cd /common_scripts/bastion-scripts/ && python3 sync-users.py" >> /sync-crontab
   crontab /sync-crontab
 
 EOF
