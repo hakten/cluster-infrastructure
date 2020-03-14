@@ -37,3 +37,4 @@ variable "eks_region" {
   default     = "us-east-1"
   description = "Please provide the region for EKS as <String>"
 }
+
