@@ -1,5 +1,9 @@
+variable "region" {
+  default = "us-central1"
+}
+
 variable "cluster_name" {
-  default = "fuchicorp-cluster"
+  default = "kube-cluster"
 }
 
 variable "node_count" {
@@ -7,19 +11,11 @@ variable "node_count" {
 }
 
 variable "google_project_id" {
-  default = "universal-team-245120"
-}
-
-variable "service_account_path" {
-  default = "./fuchicorp-service-account.json"
-}
-
-variable "region" {
-  default = "us-central1"
+  default = "angular-expanse-271218"
 }
 
 variable "google_bucket_name" {
-  default = "fuchicorp-bucket"
+  default = "t-ggl-backend"
 }
 
 variable "cluster_version" {
