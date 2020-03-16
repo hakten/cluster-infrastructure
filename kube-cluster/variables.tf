@@ -15,9 +15,9 @@ variable "google_project_id" {
 }
 
 variable "google_bucket_name" {
-  default = "t-ggl-backend"
+  default = "terraform-backend"
 }
 
 variable "cluster_version" {
-  default = "1.13.11-gke.9"
+  default = "1.14.9-gke.23"
 }
